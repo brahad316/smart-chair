@@ -75,12 +75,12 @@ Results:
 
 ![image](https://github.com/brahad316/smart-chair/assets/94699627/faee3907-a96e-4209-8dd7-e20334433e3f)
 
-* network 1:
+* network 2:
 
 number of layers: 3
-first layer size:
-second layer size:
-third layer size:
+first layer size: 50
+second layer size: 25
+third layer size: 10
 activation: ReLU
 
 Confusion matrix:
@@ -90,6 +90,22 @@ Confusion matrix:
 Results:
 
 ![image](https://github.com/brahad316/smart-chair/assets/94699627/150b112a-a17c-4348-b0c9-5f8b22f379ba)
+
+* network 3:
+
+number of layers: 3
+first layer size: 20
+second layer size: 15
+third layer size: 10
+activation: ReLU
+
+Confusion matrix:
+
+![image](https://github.com/brahad316/smart-chair/assets/94699627/df9f08d3-0ec4-4edf-8a39-c8815b1bcd56)
+
+Results:
+
+![image](https://github.com/brahad316/smart-chair/assets/94699627/363fa31a-3971-4b21-b44c-6d99e71f3137)
 
 
 > Note that all the confusion matrices are from validation.
