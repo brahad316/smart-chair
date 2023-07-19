@@ -92,6 +92,6 @@ Results:
 ![image](https://github.com/brahad316/smart-chair/assets/94699627/150b112a-a17c-4348-b0c9-5f8b22f379ba)
 
 
-` Note that all the confusion matrices are from validation.
+> Note that all the confusion matrices are from validation.
 
-> For our use case it's best to have the model with least training time. Thus we 
+For our use case it's best to have the model with least training time. 
