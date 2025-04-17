@@ -2,7 +2,7 @@
 
 % STEP 1: Load data
 fprintf('Loading data...\n');
-data = readtable('train_25_normalized_3label.csv');
+data = readtable('train_25_3label.csv');
 X = data{:, 1:1024};
 Y = data.three_label; % change this if your column is named differently
 
@@ -62,18 +62,20 @@ fprintf('Input size: %d, Number of classes: %d\n', inputSize, numClasses);
 fprintf('\n==== SETTING UP BAYESIAN OPTIMIZATION ====\n');
 optimVars = [
     optimizableVariable('numHiddenLayers',[1 5],'Type','integer')
-    optimizableVariable('numNeurons',[32 512],'Type','integer')
-    optimizableVariable('initialLearnRate',[1e-4 1e-1],'Transform','log')
-    optimizableVariable('L2Regularization',[1e-5 1e-1],'Transform','log')
+    optimizableVariable('numNeurons',[64 384],'Type','integer')
+    optimizableVariable('initialLearnRate',[1e-4 1e-2],'Transform','log')
+    optimizableVariable('L2Regularization',[1e-5 1e-2],'Transform','log')
+    optimizableVariable('miniBatchSize',[16 128],'Type','integer')
+    optimizableVariable('dropoutRate',[0 0.5])
 ];
 
 % STEP 5: Objective function for Bayesian optimization
 ObjFcn = @(params) deepnetObjectiveFcn(X, Y, inputSize, numClasses, params);
 
 % STEP 6: Run Bayesian optimization with minimal evaluations
-fprintf('Starting Bayesian optimization (2 evaluations)...\n');
+fprintf('Starting Bayesian optimization...\n');
 results = bayesopt(ObjFcn, optimVars, ...
-    'MaxObjectiveEvaluations', 30, ...  % Minimal for testing
+    'MaxObjectiveEvaluations', 200, ...  % num iterations
     'IsObjectiveDeterministic', false, ...
     'AcquisitionFunctionName','expected-improvement-plus', ...
     'UseParallel', false);
@@ -103,7 +105,7 @@ title('Classification Error for Each Evaluation');
 grid on;
 
 % Save the figure
-saveas(gcf, 'optimization_results.png');
+saveas(gcf, 'training_results/optimization_results.png');
 fprintf('Optimization plots saved to optimization_results.png\n');
 
 % You can also display detailed information about the best result
@@ -141,8 +143,11 @@ disp(results.XAtMinObjective);
 
 % ------------------------
 % Save best model
+fprintf('IMP NOTE: The order of labels for the saved model is:\n');
+disp(bestNet.Layers(end).Classes);
+
 bestParams = results.XAtMinObjective;
 [~, bestNet] = deepnetObjectiveFcn(X, Y, inputSize, numClasses, bestParams);
-save('trained_deep_model.mat', 'bestNet', 'bestParams');
+save('training_results/trained_deep_model.mat', 'bestNet', 'bestParams');
 
 fprintf('Training complete. Best model saved.\n');
