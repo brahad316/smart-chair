@@ -1,5 +1,6 @@
 Please refer to the `Code_new/` subdir for the current codebase. 
-#Pipeline:
+
+# Pipeline:
 - Train the NN in MATLAB using my `train_deepnet_bayesopt.m` script that calls `deepnetObjectiveFcn()` which utilizes MATLAB's `trainNetwork()` function for training, the former script also performs Bayesian optimization for hyeperparameter tuning using MATLAB's `bayesopt()`. 
 - The best trained model along with a minimum classification error plot will get saved in the `training_results` subdir as `trained_deepnet_model.mat`.
 - This model can be tested for inference using the `test_deepnet_model.m` script. The testing results get saved in the `testing_results` subir. This includes a confusion matrix and ROC for the test.
