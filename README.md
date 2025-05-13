@@ -3,7 +3,7 @@ Please refer to the `Code_new/` subdir for the current codebase.
 # Pipeline:
 - Train the NN in MATLAB using my `train_deepnet_bayesopt.m` script that calls `deepnetObjectiveFcn()` which utilizes MATLAB's `trainNetwork()` function for training, the former script also performs Bayesian optimization for hyeperparameter tuning using MATLAB's `bayesopt()`. 
 - The best trained model along with a minimum classification error plot will get saved in the `training_results` subdir as `trained_deepnet_model.mat`.
-- This model can be tested for inference using the `test_deepnet_model.m` script. The testing results get saved in the `testing_results` subir. This includes a confusion matrix and ROC for the test.
+- This model can be tested for inference using the `test_deepnet_model.m` script. The testing results get saved in the `testing_results` subdir. This includes a confusion matrix and ROC for the test.
 - Next, to move into the broader pipeline for app dev, we need the model in a more standard format. First, use the `mat_to_tf.m` script.
 - The conversion goes like this: `.mat --> dlnetwork --> TF --> SavedModel --> TFlite`. Converting the `Layers` array from the `.mat` to a `dlnetwork` requires it to have no output layers, thus the script removes it with `lgraph = removeLayers(lgraph, 'classoutput');`.
 - The resulting `myNN` subdir from the previous step will have our TF model. Next, to get a SavedModel format from this, use the `smart_chair_test.ipynb` notebook.
