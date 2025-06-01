@@ -64,3 +64,42 @@ else:
             print("Set variable value:")
             print(layer.variables[w])
 ```
+
+# QIDK Neural Processing SDK and SNPE flow
+
+Have the saved model format directory in the pwd. Let's say this dir is `my_saved_NN/`.
+Now you have to follow these steps:
+- Use Netron to find out the input and output node names.
+- Convert this to a DLC file so that it's compatible with the SDK utils.
+- Quantize the model from the SDK.
+- Test
+
+To covert it to DLC, do the following:
+```
+snpe-tensorflow-to-dlc \
+  --input_network my_saved_NN \
+  --saved_model_tag serve \
+  --saved_model_signature_key serving_default \
+  --input_dim "ACTUAL_INPUT_NODE_NAME" 1,1024 \
+  --out_name "ACTUAL_OUTPUT_NODE_NAME" \
+  --output_path my_model.dlc
+```
+Replace `ACTUAL_INPUT_NODE_NAME` and `ACTUAL_OUTPUT_NODE_NAME` based on what you find in Netron. Also note that the `(1, 1024)` must be changed to the actual input shape if that's changed.
+
+Then, to quantize, run:
+```
+snpe-dlc-quant \
+  --input_dlc my_model.dlc \
+  --input_list input_list.txt \
+  --output_dlc my_model_quantized.dlc
+```
+Note that the `input_list.txt` needs to have the actual paths to the raw files. But, currently I'm using Google Colab to do all the pre-processing. (Refer to `smart_chair_3label.ipnyb`). Thus, after downloading the `calib_raw_inputs/` from colab, run this on the terminal:
+```
+find "$(pwd)/calib_raw_inputs" -name '*.raw' | sort > input_list.txt
+```
+You don't need to download the `input.txt` from colab.
+
+Then, we move on to testing the quantized model. For this do:
+```
+snpe-net-run --container my_model_quantized.dlc --input_list input_list.txt --output_dir snpe_output
+```
